@@ -57,7 +57,6 @@ final class ProductAttributesMapper implements ProductAttributesMapperInterface
         }
 
         $attributeValues = $this->productAttributeValueRepository->getUniqueAttributeValues($productAttribute);
-
         $choices = [];
         array_walk($attributeValues, function (ProductAttributeValueInterface $productAttributeValue) use (&$choices): void {
             $product = $productAttributeValue->getProduct();
@@ -81,8 +80,10 @@ final class ProductAttributesMapper implements ProductAttributesMapperInterface
                     $choices[$label] = $choice;
                 }
             } else {
-                $choice = is_string($value) ? $this->stringFormatter->formatToLowercaseWithoutSpaces($value) : $value;
-                $choices[$value] = $choice;
+                if ($productAttributeValue->getLocaleCode() === $this->localeContext->getLocaleCode()) {
+                    $choice = is_string($value) ? $this->stringFormatter->formatToLowercaseWithoutSpaces($value) : $value;
+                    $choices[$value] = $choice;
+                }
             }
         });
         unset($attributeValues);

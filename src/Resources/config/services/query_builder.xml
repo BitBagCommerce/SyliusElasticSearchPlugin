@@ -31,7 +31,9 @@
 
         <service id="bitbag_sylius_elasticsearch_plugin.query_builder.has_options" class="BitBag\SyliusElasticsearchPlugin\QueryBuilder\HasOptionsQueryBuilder" />
 
-        <service id="bitbag_sylius_elasticsearch_plugin.query_builder.has_attributes" class="BitBag\SyliusElasticsearchPlugin\QueryBuilder\HasAttributesQueryBuilder" />
+        <service id="bitbag_sylius_elasticsearch_plugin.query_builder.has_attributes" class="BitBag\SyliusElasticsearchPlugin\QueryBuilder\HasAttributesQueryBuilder" >
+            <argument type="service" id="sylius.context.locale"/>
+        </service>
 
         <service id="bitbag_sylius_elasticsearch_plugin.query_builder.has_price_between" class="BitBag\SyliusElasticsearchPlugin\QueryBuilder\HasPriceBetweenQueryBuilder">
             <argument type="service" id="bitbag_sylius_elasticsearch_plugin.property_name_resolver.price" />

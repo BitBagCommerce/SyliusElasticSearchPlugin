@@ -16,6 +16,7 @@ use BitBag\SyliusElasticsearchPlugin\Formatter\StringFormatterInterface;
 use BitBag\SyliusElasticsearchPlugin\PropertyNameResolver\ConcatedNameResolverInterface;
 use Elastica\Document;
 use FOS\ElasticaBundle\Event\TransformEvent;
+use Sylius\Component\Attribute\Model\AttributeTranslation;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 
@@ -52,34 +53,59 @@ final class AttributeBuilder extends AbstractBuilder
     {
         foreach ($product->getAttributes() as $attributeValue) {
             $attribute = $attributeValue->getAttribute();
+
             if (!$attribute) {
                 continue;
             }
-            $attributeCode = $attribute->getCode();
-            $index = $this->attributeNameResolver->resolvePropertyName($attributeCode);
-            $value = $attributeValue->getValue();
-            if ($attribute->getType() === 'select') {
-                $choices = $attribute->getConfiguration()['choices'];
-                if (is_array($value)) {
-                    foreach ($value as $i => $item) {
-                        $value[$i] = $choices[$item][$this->localeContext->getLocaleCode()] ?? $item;
-                    }
-                } else {
-                    $value = $choices[$value][$this->localeContext->getLocaleCode()] ?? $value;
-                }
-            }
-            $attributes = [];
 
-            if (is_array($value)) {
-                foreach ($value as $singleElement) {
-                    $attributes[] = $this->stringFormatter->formatToLowercaseWithoutSpaces((string) $singleElement);
+            $attributeValueCode = $attributeValue->getLocaleCode();
+            $attributeCode = $attribute->getCode();
+
+            $attributeConfiguration = $attribute->getConfiguration();
+            foreach ($attribute->getTranslations() as $attributeTranslation) {
+                if ($attributeValueCode !== $attributeTranslation->getLocale()) {
+                    continue;
+                }
+                $attributeValue = $attributeValue->getValue();
+
+                $propertyName = $this->attributeNameResolver->resolvePropertyName(
+                    \sprintf('%s_%s', $attributeCode, $attributeTranslation->getLocale()
+                    )
+                );
+                $values = $this->resolveProductAttribute(
+                    $attributeConfiguration,
+                    $attributeValue,
+                    $attributeTranslation
+                );
+
+                $document->set($propertyName, $values);
+            }
+        }
+    }
+
+    private function resolveProductAttribute(array $attributeConfiguration, $attributeValue, AttributeTranslation $attribute): array
+    {
+        if ($attribute->getTranslatable()->getType() === 'select') {
+            $choices = $attributeConfiguration['choices'];
+            if (is_array($attributeValue)) {
+                foreach ($attributeValue as $i => $item) {
+                    $attributeValue[$i] = $choices[$item][$attribute->getLocale()] ?? $item;
                 }
             } else {
-                $value = is_string($value) ? $this->stringFormatter->formatToLowercaseWithoutSpaces($value) : $value;
-                $attributes[] = $value;
+                $attributeValue = $choices[$attributeValue][$attribute->getLocale()] ?? $attributeValue;
             }
-
-            $document->set($index, $attributes);
         }
+
+        $attributes = [];
+        if (is_array($attributeValue)) {
+            foreach ($attributeValue as $singleElement) {
+                $attributes[] = $this->stringFormatter->formatToLowercaseWithoutSpaces((string) $singleElement);
+            }
+        } else {
+            $attributeValue = is_string($attributeValue) ? $this->stringFormatter->formatToLowercaseWithoutSpaces($attributeValue) : $attributeValue;
+            $attributes[] = $attributeValue;
+        }
+
+        return $attributes;
     }
 }
