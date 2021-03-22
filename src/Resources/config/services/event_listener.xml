@@ -16,6 +16,11 @@
             <tag name="kernel.event_listener" event="sylius.product.post_create" method="updateIndex" />
             <tag name="kernel.event_listener" event="sylius.product.post_update" method="updateIndex" />
         </service>
+        <service id="bitbag_sylius_elasticsearch_plugin.event_listener.product_variant_index" class="BitBag\SyliusElasticsearchPlugin\EventListener\ProductVariantIndexListener">
+            <argument type="service" id="fos_elastica.object_persister.bitbag_shop_product.default" />
+            <tag name="kernel.event_listener" event="sylius.product_variant.post_create" method="createProductInIndex" />
+            <tag name="kernel.event_listener" event="sylius.product_variant.post_update" method="updateProductInIndex" />
+            <tag name="kernel.event_listener" event="sylius.product_variant.post_delete" method="deleteProductInIndex" />
         <service id="bitbag_sylius_elasticsearch_plugin.event_listener.order_products" class="BitBag\SyliusElasticsearchPlugin\EventListener\OrderProductsListener" public="true">
             <argument type="service" id="bitbag.sylius_elasticsearch_plugin.refresher.resource" />
             <argument type="string">fos_elastica.object_persister.bitbag_shop_product.default</argument>

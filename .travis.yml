@@ -11,6 +11,14 @@ matrix:
             php: 7.3
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.7.*"
+        -
+            php: 7.3
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.8.*"
+        -
+            php: 7.4
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.8.*"
 
 addons:
     apt:

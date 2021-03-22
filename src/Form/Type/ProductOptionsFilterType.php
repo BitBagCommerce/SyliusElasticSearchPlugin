@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace BitBag\SyliusElasticsearchPlugin\Form\Type;
 
 use BitBag\SyliusElasticsearchPlugin\Context\ProductOptionsContextInterface;
+use BitBag\SyliusElasticsearchPlugin\Finder\FinderExcludable;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\ChoiceMapper\ProductOptionsMapperInterface;
 use BitBag\SyliusElasticsearchPlugin\PropertyNameResolver\ConcatedNameResolverInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -42,6 +43,9 @@ final class ProductOptionsFilterType extends AbstractFilterType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($this->productOptionsContext->getOptions() as $productOption) {
+            if ($productOption instanceof FinderExcludable && $productOption->isFilterExcluded() === true) {
+                continue;
+            }
             $name = $this->optionNameResolver->resolvePropertyName($productOption->getCode());
             $choices = $this->productOptionsMapper->mapToChoices($productOption);
             $choices = array_unique($choices);

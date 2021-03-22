@@ -16,12 +16,14 @@
             <argument type="service" id="fos_elastica.finder.bitbag_option_taxons.default" />
             <argument type="service" id="bitbag_sylius_elasticsearch_plugin.query_builder.product_options_by_taxon" />
             <argument>%bitbag_es_shop_option_taxons_property%</argument>
+            <argument>%bitbag_es_filter_options_max%</argument>
         </service>
 
         <service id="bitbag_sylius_elasticsearch_plugin.finder.product_attributes" class="BitBag\SyliusElasticsearchPlugin\Finder\ProductAttributesFinder">
             <argument type="service" id="fos_elastica.finder.bitbag_attribute_taxons.default" />
             <argument type="service" id="bitbag_sylius_elasticsearch_plugin.query_builder.product_attributes_by_taxon" />
             <argument>%bitbag_es_shop_attribute_taxons_property%</argument>
+            <argument>%bitbag_es_filter_attributes_max%</argument>
         </service>
     </services>
 </container>

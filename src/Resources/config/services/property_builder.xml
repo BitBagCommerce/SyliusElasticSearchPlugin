@@ -4,6 +4,8 @@
     <parameters>
         <parameter key="bitbag_es_excluded_filter_options" type="collection" />
         <parameter key="bitbag_es_excluded_filter_attributes" type="collection" />
+        <parameter key="bitbag_es_filter_attributes_max">20</parameter>
+        <parameter key="bitbag_es_filter_options_max">20</parameter>
     </parameters>
 
     <services>

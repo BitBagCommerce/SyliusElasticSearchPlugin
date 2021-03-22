@@ -59,7 +59,7 @@ final class AttributeBuilder extends AbstractBuilder
             $index = $this->attributeNameResolver->resolvePropertyName($attributeCode);
             $value = $attributeValue->getValue();
             if ($attribute->getType() === 'select') {
-                $choices = $attribute->getConfiguration()['choices'];
+                $choices = $attribute->getConfiguration()['choices'] ?? [];
                 if (is_array($value)) {
                     foreach ($value as $i => $item) {
                         $value[$i] = $choices[$item][$this->localeContext->getLocaleCode()] ?? $item;
