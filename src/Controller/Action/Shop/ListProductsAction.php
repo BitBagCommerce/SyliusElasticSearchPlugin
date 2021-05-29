@@ -17,7 +17,7 @@ use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\PaginationDat
 use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\SortDataHandlerInterface;
 use BitBag\SyliusElasticsearchPlugin\Finder\ShopProductsFinderInterface;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,8 +39,8 @@ final class ListProductsAction
     /** @var ShopProductsFinderInterface */
     private $shopProductsFinder;
 
-    /** @var EngineInterface */
-    private $templatingEngine;
+    /** @var Environment */
+    private $twig;
 
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -48,14 +48,14 @@ final class ListProductsAction
         SortDataHandlerInterface $shopProductsSortDataHandler,
         PaginationDataHandlerInterface $paginationDataHandler,
         ShopProductsFinderInterface $shopProductsFinder,
-        EngineInterface $templatingEngine
+        Environment $twig
     ) {
         $this->formFactory = $formFactory;
         $this->shopProductListDataHandler = $shopProductListDataHandler;
         $this->shopProductsSortDataHandler = $shopProductsSortDataHandler;
         $this->paginationDataHandler = $paginationDataHandler;
         $this->shopProductsFinder = $shopProductsFinder;
-        $this->templatingEngine = $templatingEngine;
+        $this->twig = $twig;
     }
 
     public function __invoke(Request $request): Response

@@ -21,7 +21,7 @@ use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
 use Pagerfanta\Pagerfanta;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -37,7 +37,7 @@ final class ListProductsActionSpec extends ObjectBehavior
         SortDataHandlerInterface $shopProductsSortDataHandler,
         PaginationDataHandlerInterface $paginationDataHandler,
         ShopProductsFinderInterface $shopProductsFinder,
-        EngineInterface $templatingEngine
+        Environment $twig
     ): void {
         $this->beConstructedWith(
             $formFactory,
@@ -45,7 +45,7 @@ final class ListProductsActionSpec extends ObjectBehavior
             $shopProductsSortDataHandler,
             $paginationDataHandler,
             $shopProductsFinder,
-            $templatingEngine
+            $twig
         );
     }
 
