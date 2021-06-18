@@ -18,13 +18,20 @@ fos_elastica:
             index_name: "bitbag_shop_products_%kernel.environment%"
             types:
                 default:
+                    indexable_callback: ['@BitBag\SyliusElasticsearchPlugin\Resolver\IndexableResolver', 'isProductIndexable']
                     properties:
-                        enabled: ~
+                        code:
+                            type: 'string'
+                            analyzer: 'whitespace'
                     persistence:
+                        identifier: 'code'
                         driver: orm
                         model: "%sylius.model.product.class%"
+                        ###> All listeners are disabled. We handle this with a sylius-resource-event listener.
                         listener:
-                            defer: true
+                            insert: false
+                            update: false
+                            delete: false
                             logger: true
                         elastica_to_model_transformer:
                             ignore_missing: true
