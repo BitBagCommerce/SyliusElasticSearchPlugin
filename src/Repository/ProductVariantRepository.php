@@ -27,14 +27,13 @@ final class ProductVariantRepository implements ProductVariantRepositoryInterfac
         $this->baseProductVariantRepository = $baseProductVariantRepository;
     }
 
-    public function findOneByOptionValue(ProductOptionValueInterface $productOptionValue): ?ProductVariantInterface
+    public function findOneByOptionValue(ProductOptionValueInterface $productOptionValue): array
     {
         return $this->baseProductVariantRepository->createQueryBuilder('o')
             ->where(':optionValue MEMBER OF o.optionValues')
             ->setParameter('optionValue', $productOptionValue)
             ->getQuery()
-            ->setMaxResults(1)
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 }
