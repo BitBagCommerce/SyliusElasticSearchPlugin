@@ -42,6 +42,7 @@ final class AttributeTaxonsBuilder extends AbstractBuilder
         $documentAttribute = $event->getObject();
 
         if (!$documentAttribute instanceof AttributeInterface
+            || $documentAttribute->getId() === null
             || in_array($documentAttribute->getCode(), $this->excludedAttributes)
         ) {
             return;

@@ -56,6 +56,7 @@ final class OptionTaxonsBuilder extends AbstractBuilder
         $documentProductOption = $event->getObject();
 
         if (!$documentProductOption instanceof ProductOptionInterface
+            || $documentProductOption->getId() === null
             || in_array($documentProductOption->getCode(), $this->excludedOptions, true)
         ) {
             return;

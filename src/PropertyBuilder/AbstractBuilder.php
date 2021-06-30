@@ -14,6 +14,7 @@ namespace BitBag\SyliusElasticsearchPlugin\PropertyBuilder;
 
 use FOS\ElasticaBundle\Event\TransformEvent;
 use Sylius\Component\Resource\Model\ToggleableInterface;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
 abstract class AbstractBuilder implements PropertyBuilderInterface
 {
@@ -21,7 +22,10 @@ abstract class AbstractBuilder implements PropertyBuilderInterface
     {
         $model = $event->getObject();
 
-        if (!$model instanceof $supportedModelClass || ($model instanceof ToggleableInterface && !$model->isEnabled())) {
+        if (!$model instanceof $supportedModelClass
+            || ($model instanceof ResourceInterface && $model->getId() === null)
+            || ($model instanceof ToggleableInterface && !$model->isEnabled())
+        ) {
             return;
         }
 
