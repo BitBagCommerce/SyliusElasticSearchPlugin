@@ -1,6 +1,5 @@
 parameters:
     sylius.security.admin_regex: "^/admin"
-    sylius.security.api_regex: "^/api"
     sylius.security.shop_regex: "^/(?!admin|new-api|api/.*|api$|media/.*)[^/]++"
     sylius.security.new_api_route: "/new-api"
     sylius.security.new_api_regex: "^%sylius.security.new_api_route%"
@@ -50,10 +49,6 @@ security:
                 target: sylius_admin_login
             anonymous: true
 
-        oauth_token:
-            pattern: "%sylius.security.api_regex%/oauth/v2/token"
-            security: false
-
         new_api_admin_user:
             pattern: "%sylius.security.new_api_route%/admin-user-authentication-token"
             provider: sylius_admin_user_provider
@@ -92,13 +87,6 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-
-        api:
-            pattern: "%sylius.security.api_regex%/.*"
-            provider: sylius_admin_user_provider
-            fos_oauth: true
-            stateless: true
-            anonymous: true
 
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
@@ -141,12 +129,10 @@ security:
         - { path: "%sylius.security.shop_regex%/_partial", role: ROLE_NO_ACCESS }
 
         - { path: "%sylius.security.admin_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: "%sylius.security.api_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.shop_regex%/register", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/verify", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
-        - { path: "%sylius.security.api_regex%/.*", role: ROLE_API_ACCESS }
         - { path: "%sylius.security.shop_regex%/account", role: ROLE_USER }
